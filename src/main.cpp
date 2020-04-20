@@ -1,4 +1,5 @@
 // ina226_example_main_cpp.txt
+//  Check this website for wiring: http://e2e.ti.com/support/amplifiers/f/14/t/856127?Problems-with-Arduino-of-the-INA226-module
 
 #include <Arduino.h>
 
@@ -34,7 +35,8 @@ ReactESP app([] () {
   auto* pINA226 = new INA226();
   pINA226->begin();  // uses the default address of 0x40
   pINA226->configure();  // uses the default values
-  pINA226->calibrate(0.1,1.0);  // uses the default values
+  pINA226->calibrate();  // uses the default values
+  // pINA226->calibrate(0.1,1.0);  // uses the default values
   // Now the INA226 is ready for reading, which will be done by the INA226value class.
 
   // Define the read_delay you're going to use, if other than the default of 500 ms.

@@ -1,6 +1,6 @@
 #include "ina226value.h"
 #include "sensesp.h"
-
+#include <HardwareSerial.h>
 
 // INA226value represents a value read from a Texaxs Instruments INA226 High Side DC Current Sensor.
 INA226value::INA226value(INA226* pINA226, INA226ValType val_type, uint read_delay, String config_path) :
@@ -15,15 +15,25 @@ void INA226value::enable() {
       double scale = 0.00001;  // i.e. round to nearest one-hundred-thousandth
       switch (val_type) { 
         case bus_voltage: output = (int)(pINA226->readBusVoltage() / scale) * scale; // Volts
+                          Serial.print("Bus voltage: ");
+                          Serial.println(pINA226->readBusVoltage(), 5);
                 break;
-        case shunt_voltage: output = (int) ((pINA226->readShuntVoltage() / 1000) / scale) * scale; // Volts
+        case shunt_voltage: output = (int)(pINA226->readShuntVoltage() / scale) * scale; // Volts
+                            Serial.print("Shunt voltage: ");
+                            Serial.println(pINA226->readShuntVoltage(), 5);
                 break;
-        case current: output = (int) ((pINA226->readShuntCurrent() / 1000) / scale) * scale; // Amps
+        case current: output = (int)(pINA226->readShuntCurrent() / scale) * scale; // Amps
+                      Serial.print("Shunt current (amps): ");
+                      Serial.println(pINA226->readShuntCurrent(), 5);  
                 break;
-        case power: output = (int) ((pINA226->readBusPower() / 1000) / scale) * scale; // Watts
+        case power: output = (int)(pINA226->readBusPower() / scale) * scale; // Watts
+                    Serial.print("Bus power (watts): ");
+                    Serial.println(pINA226->readBusPower(), 5);
                 break; 
-        case load_voltage: output = (int) ((pINA226->readBusVoltage() + pINA226->readShuntVoltage()) / scale) * scale; // Volts
-                 break; 
+        case load_voltage: output = ((int)(pINA226->readBusVoltage() + pINA226->readShuntVoltage()) / scale) * scale; // Volts
+                           Serial.print("Load voltage: ");
+                           Serial.println(pINA226->readBusVoltage() + pINA226->readShuntVoltage(), 5);
+                break; 
         default: debugE("FATAL: invalid val_type parameter.");  
       }
       
