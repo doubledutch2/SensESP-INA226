@@ -16,6 +16,8 @@ void INA226value::enable() {
       switch (val_type) { 
         case bus_voltage: output = (int)(pINA226->readBusVoltage() / scale) * scale; // Volts
                           Serial.print("Bus voltage: ");
+                          Serial.print(pINA226->readBusVoltage());
+                          Serial.print('-');
                           Serial.println(pINA226->readBusVoltage(), 5);
                 break;
         case shunt_voltage: output = (int)(pINA226->readShuntVoltage() / scale) * scale; // Volts
@@ -30,7 +32,7 @@ void INA226value::enable() {
                     Serial.print("Bus power (watts): ");
                     Serial.println(pINA226->readBusPower(), 5);
                 break; 
-        case load_voltage: output = ((int)(pINA226->readBusVoltage() + pINA226->readShuntVoltage()) / scale) * scale; // Volts
+        case load_voltage: output = ((int)((pINA226->readBusVoltage() + pINA226->readShuntVoltage()) / scale)) * scale; // Volts
                            Serial.print("Load voltage: ");
                            Serial.println(pINA226->readBusVoltage() + pINA226->readShuntVoltage(), 5);
                 break; 
