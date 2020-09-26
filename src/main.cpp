@@ -10,7 +10,7 @@
 #include "sensesp_app.h"
 #include "signalk/signalk_output.h"
 #include "ina226value.h"
-#include "sensors/i2c_tools.h"
+#include "i2c_tools.h"
 
 void checkConfig(INA226* ina)
 {
@@ -100,7 +100,7 @@ ReactESP app([] () {
 
   // Create the SensESPApp with whatever "standard sensors" you want: noStdSensors, allStdSensors, or uptimeOnly.
   // The default is allStdSensors.
-  sensesp_app = new SensESPApp(noStdSensors);
+  sensesp_app = new SensESPApp("SensESP","","","",0,NONE);
   scan_i2c();
 
   // Create a pointer to an INA226, which represents the physical sensor.
@@ -109,10 +109,18 @@ ReactESP app([] () {
   // https://github.com/jarzebski/Arduino-INA226.
   auto* pINA226 = new INA226();
   pINA226->begin();  // uses the default address of 0x40
-  pINA226->configure();
   //    pINA226->configure(INA226_AVERAGES_1, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);  // uses the default values
   //    pINA226->calibrate();  // uses the default values
-  pINA226->calibrate(0.1,0.001);  // uses the default values
+
+  //  Attempt 1
+  //  pINA226->configure();
+  //  pINA226->calibrate(0.1, 4);  // uses the default values
+  
+  //  Attempt 2
+  
+  pINA226->configure(INA226_AVERAGES_1, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);  // uses the default values
+  pINA226->calibrate(0.01, 4);  // uses the default values
+  
   // Now the INA226 is ready for reading, which will be done by the INA226value class.
 
   checkConfig(pINA226);
